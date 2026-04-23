@@ -1,0 +1,61 @@
+{
+  "entities": {
+    "Project": {
+      "title": "Project",
+      "description": "A workspace for a specific website or client.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "domain": { "type": "string", "format": "uri" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "ownerId": { "type": "string" }
+      },
+      "required": ["name", "domain", "ownerId"]
+    },
+    "Profile": {
+      "title": "Business Profile",
+      "description": "The main entity (Organization/LocalBusiness) for a project.",
+      "type": "object",
+      "properties": {
+        "projectId": { "type": "string" },
+        "type": { "type": "string", "description": "e.g., Organization, Dentist" },
+        "name": { "type": "string" },
+        "url": { "type": "string", "format": "uri" },
+        "logo": { "type": "string", "format": "uri" },
+        "sameAs": { "type": "array", "items": { "type": "string", "format": "uri" } },
+        "kgmid": { "type": "string", "description": "Google Knowledge Graph Entity ID" },
+        "@id": { "type": "string", "description": "JSON-LD absolute identifier" }
+      },
+      "required": ["projectId", "type", "name", "url", "@id"]
+    },
+    "GraphNode": {
+      "title": "Graph Node",
+      "description": "An individual schema entity in the graph (WebPage, Article, FAQ).",
+      "type": "object",
+      "properties": {
+        "projectId": { "type": "string" },
+        "type": { "type": "string" },
+        "name": { "type": "string" },
+        "url": { "type": "string", "format": "uri" },
+        "data": { "type": "object", "description": "Dynamic Schema fields" },
+        "@id": { "type": "string" },
+        "links": { "type": "array", "items": { "type": "string" }, "description": "IDs of related nodes" }
+      },
+      "required": ["projectId", "type", "@id"]
+    }
+  },
+  "firestore": {
+    "/projects/{projectId}": {
+      "schema": "Project",
+      "description": "User projects"
+    },
+    "/projects/{projectId}/profiles/{profileId}": {
+      "schema": "Profile",
+      "description": "Main business profile for the project"
+    },
+    "/projects/{projectId}/nodes/{nodeId}": {
+      "schema": "GraphNode",
+      "description": "Entities within the project graph"
+    }
+  }
+}
